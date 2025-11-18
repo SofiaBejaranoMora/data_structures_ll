@@ -1,7 +1,10 @@
 #include "windowsMenu.h"
 #include "Button.h"
+#include "WindowsUser.h"
+#include "WindowsOrder.h"
 
 using namespace sf;
+using namespace std;
 
 windowsMenu::windowsMenu()
 {
@@ -24,7 +27,7 @@ void windowsMenu::run()
     float buttonWidth = 300.f;
     float buttonHeight = 70.f;
     float spacing = 20.f;
-    int numButtons = 4;
+    int numButtons = 5;
 
     float centerX = mode.width / 2.f;
     float totalHeight = numButtons * buttonHeight + (numButtons - 1) * spacing;
@@ -43,16 +46,22 @@ void windowsMenu::run()
     botonConsultarUsuarios.build("Consultar Usuarios",
         Vector2f(xPos, startY + 2 * (buttonHeight + spacing)), "morado");
 
+    Button botonVerOrdenes(buttonWidth, buttonHeight, 28, font);
+    botonVerOrdenes.build("Ver ordenes",
+        Vector2f(xPos, startY + 3 * (buttonHeight + spacing)), "morado");
+
     Button botonSalirSistema(buttonWidth, buttonHeight, 28, font);
     botonSalirSistema.build("Salir",
-        Vector2f(xPos, startY + 3 * (buttonHeight + spacing)), "morado");
+        Vector2f(xPos, startY + 4 * (buttonHeight + spacing)), "morado");
 
     bool hoverRegistrarUsuario = false;
     bool hoverEliminarUsuario = false;
     bool hoverConsultarUsuarios = false;
+    bool hoverVerOrdenes = false;
     bool hoverSalirSistema = false;
 
     WindowsUser ventanaUsuarios;
+    WindowsOrder ventanaOrdenes;
 
     while (window.isOpen()) {
         Event event;
@@ -126,6 +135,12 @@ void windowsMenu::run()
                 window.setVisible(true);
             }
 
+            if (handleButton(botonVerOrdenes, hoverVerOrdenes)) {
+                window.setVisible(false);
+                ventanaOrdenes.run(userTree);
+                window.setVisible(true);
+            }
+
             if (handleButton(botonSalirSistema, hoverSalirSistema)) {
                 window.close();
             }
@@ -141,6 +156,9 @@ void windowsMenu::run()
 
         window.draw(botonConsultarUsuarios.getShape());
         window.draw(botonConsultarUsuarios.getText());
+
+        window.draw(botonVerOrdenes.getShape());
+        window.draw(botonVerOrdenes.getText());
 
         window.draw(botonSalirSistema.getShape());
         window.draw(botonSalirSistema.getText());
