@@ -47,3 +47,11 @@ void User::setAge(int age) {
 void User::setBalance(double balance) {
     this->balance = balance;
 }
+
+string User::toString() const {
+    return string("Cedula: ") + to_string(id) + "\n" +
+        "Nombre: " + name + "\n" +
+        "Edad: " + to_string(age) + "\n" +
+        "Balance: " + to_string(balance);
+}
+

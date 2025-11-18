@@ -248,7 +248,12 @@ void WindowsUser::run(UserWindowMode modoVentana, UserTree& userTree)
                         manejarTextoCampo(campoCedula, event.text.unicode, true, false);
                     }
 
-                    manejarTextoCampo(campoNombre, event.text.unicode, false, false);
+                    // >>> NUEVO: límite de 22 caracteres para el nombre
+                    if (!(campoNombre.active &&
+                        campoNombre.value.size() >= 22 &&
+                        event.text.unicode != 8)) {
+                        manejarTextoCampo(campoNombre, event.text.unicode, false, false);
+                    }
 
                     if (!(campoEdad.active &&
                         campoEdad.value.size() >= 3 &&

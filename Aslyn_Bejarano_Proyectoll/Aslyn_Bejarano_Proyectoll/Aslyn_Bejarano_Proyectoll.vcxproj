@@ -136,6 +136,7 @@
     <ClCompile Include="User.cpp" />
     <ClCompile Include="UserTree.cpp" />
     <ClCompile Include="windowsMenu.cpp" />
+    <ClCompile Include="WindowsOrder.cpp" />
     <ClCompile Include="WindowsUser.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -147,6 +148,7 @@
     <ClInclude Include="User.h" />
     <ClInclude Include="UserTree.h" />
     <ClInclude Include="windowsMenu.h" />
+    <ClInclude Include="WindowsOrder.h" />
     <ClInclude Include="WindowsUser.h" />
   </ItemGroup>
   <ItemGroup>

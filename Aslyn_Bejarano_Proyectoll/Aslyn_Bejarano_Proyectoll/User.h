@@ -23,4 +23,6 @@ public:
     void setName(const string& name);
     void setAge(int age);
     void setBalance(double balance);
+    string toString() const;
+
 };
