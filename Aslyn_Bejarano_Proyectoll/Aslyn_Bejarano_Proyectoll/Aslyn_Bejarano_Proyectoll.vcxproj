@@ -133,6 +133,7 @@
   <ItemGroup>
     <ClCompile Include="Aslyn_Bejarano_Proyectoll.cpp" />
     <ClCompile Include="Button.cpp" />
+    <ClCompile Include="FileManager.cpp" />
     <ClCompile Include="User.cpp" />
     <ClCompile Include="UserTree.cpp" />
     <ClCompile Include="windowsMenu.cpp" />
@@ -143,6 +144,7 @@
     <ClInclude Include="Button.h" />
     <ClInclude Include="DoubleList.h" />
     <ClInclude Include="DoubleNode.h" />
+    <ClInclude Include="FileManager.h" />
     <ClInclude Include="NodeTree.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="User.h" />

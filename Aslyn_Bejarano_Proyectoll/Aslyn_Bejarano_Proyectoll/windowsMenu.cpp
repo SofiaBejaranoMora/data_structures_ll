@@ -9,6 +9,23 @@ using namespace std;
 windowsMenu::windowsMenu()
 {
     mode = VideoMode::getDesktopMode();
+    fileManager = FileManager("UseriosArchivoOriginal.txt");
+    userTree = nullptr;
+    datosCargados = false;
+}
+
+void windowsMenu::cargarUserTreeSiEsNecesario()
+{
+    if (!datosCargados) {
+        UserTree* loaded = fileManager.loadUserTree();
+        if (loaded != nullptr) {
+            userTree = loaded;
+        }
+        else {
+            userTree = new UserTree();
+        }
+        datosCargados = true;
+    }
 }
 
 void windowsMenu::run()
@@ -23,6 +40,8 @@ void windowsMenu::run()
     Font font;
     if (!font.loadFromFile("segoeprb.ttf"))
         return;
+
+    cargarUserTreeSiEsNecesario();
 
     float buttonWidth = 300.f;
     float buttonHeight = 70.f;
@@ -69,6 +88,9 @@ void windowsMenu::run()
             if (event.type == Event::Closed ||
                 (event.type == Event::KeyPressed &&
                     event.key.code == Keyboard::Escape)) {
+                if (userTree != nullptr) {
+                    fileManager.saveUsers(userTree->getPreOrder());
+                }
                 window.close();
             }
 
@@ -119,29 +141,40 @@ void windowsMenu::run()
 
             if (handleButton(botonRegistrarUsuario, hoverRegistrarUsuario)) {
                 window.setVisible(false);
-                ventanaUsuarios.run(UserWindowMode::Registrar, userTree);
+                if (userTree != nullptr) {
+                    ventanaUsuarios.run(UserWindowMode::Registrar, *userTree);
+                }
                 window.setVisible(true);
             }
 
             if (handleButton(botonEliminarUsuario, hoverEliminarUsuario)) {
                 window.setVisible(false);
-                ventanaUsuarios.run(UserWindowMode::Eliminar, userTree);
+                if (userTree != nullptr) {
+                    ventanaUsuarios.run(UserWindowMode::Eliminar, *userTree);
+                }
                 window.setVisible(true);
             }
 
             if (handleButton(botonConsultarUsuarios, hoverConsultarUsuarios)) {
                 window.setVisible(false);
-                ventanaUsuarios.run(UserWindowMode::Consultar, userTree);
+                if (userTree != nullptr) {
+                    ventanaUsuarios.run(UserWindowMode::Consultar, *userTree);
+                }
                 window.setVisible(true);
             }
 
             if (handleButton(botonVerOrdenes, hoverVerOrdenes)) {
                 window.setVisible(false);
-                ventanaOrdenes.run(userTree);
+                if (userTree != nullptr) {
+                    ventanaOrdenes.run(*userTree);
+                }
                 window.setVisible(true);
             }
 
             if (handleButton(botonSalirSistema, hoverSalirSistema)) {
+                if (userTree != nullptr) {
+                    fileManager.saveUsers(userTree->getPreOrder());
+                }
                 window.close();
             }
         }
