@@ -52,6 +52,8 @@ void windowsMenu::run()
     bool hoverConsultarUsuarios = false;
     bool hoverSalirSistema = false;
 
+    WindowsUser ventanaUsuarios;
+
     while (window.isOpen()) {
         Event event;
         while (window.pollEvent(event)) {
@@ -107,19 +109,24 @@ void windowsMenu::run()
                 };
 
             if (handleButton(botonRegistrarUsuario, hoverRegistrarUsuario)) {
-                // aca va la accion que va hacer el button Registrar Usuario
+                window.setVisible(false);
+                ventanaUsuarios.run(UserWindowMode::Registrar, userTree);
+                window.setVisible(true);
             }
 
             if (handleButton(botonEliminarUsuario, hoverEliminarUsuario)) {
-                // aca va la accion que va hacer el button Eliminar Usuario
+                window.setVisible(false);
+                ventanaUsuarios.run(UserWindowMode::Eliminar, userTree);
+                window.setVisible(true);
             }
 
             if (handleButton(botonConsultarUsuarios, hoverConsultarUsuarios)) {
-                // aca va la accion que va hacer el button Consultar Usuarios
+                window.setVisible(false);
+                ventanaUsuarios.run(UserWindowMode::Consultar, userTree);
+                window.setVisible(true);
             }
 
             if (handleButton(botonSalirSistema, hoverSalirSistema)) {
-                // aca va la accion que va hacer el button Salir
                 window.close();
             }
         }
