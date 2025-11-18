@@ -1,12 +1,15 @@
 #include "windowsMenu.h"
-#include <SFML/Graphics.hpp>
 #include "Button.h"
-#include "windowsMenu.h"
+
+using namespace sf;
 
 windowsMenu::windowsMenu()
 {
-    VideoMode mode = VideoMode::getDesktopMode();
+    mode = VideoMode::getDesktopMode();
+}
 
+void windowsMenu::run()
+{
     RenderWindow window(
         mode,
         "Rutas",
@@ -18,10 +21,36 @@ windowsMenu::windowsMenu()
     if (!font.loadFromFile("segoeprb.ttf"))
         return;
 
-    Button exitButton(250.f, 70.f, 28, font);
-    exitButton.build("Salir", Vector2f(50.f, 50.f), "morado");
+    float buttonWidth = 300.f;
+    float buttonHeight = 70.f;
+    float spacing = 20.f;
+    int numButtons = 4;
 
-    bool hoverExit = false;
+    float centerX = mode.width / 2.f;
+    float totalHeight = numButtons * buttonHeight + (numButtons - 1) * spacing;
+    float startY = (mode.height - totalHeight) / 2.f;
+    float xPos = centerX - buttonWidth / 2.f;
+
+    Button botonRegistrarUsuario(buttonWidth, buttonHeight, 28, font);
+    botonRegistrarUsuario.build("Registrar Usuario",
+        Vector2f(xPos, startY + 0 * (buttonHeight + spacing)), "morado");
+
+    Button botonEliminarUsuario(buttonWidth, buttonHeight, 28, font);
+    botonEliminarUsuario.build("Eliminar Usuario",
+        Vector2f(xPos, startY + 1 * (buttonHeight + spacing)), "morado");
+
+    Button botonConsultarUsuarios(buttonWidth, buttonHeight, 28, font);
+    botonConsultarUsuarios.build("Consultar Usuarios",
+        Vector2f(xPos, startY + 2 * (buttonHeight + spacing)), "morado");
+
+    Button botonSalirSistema(buttonWidth, buttonHeight, 28, font);
+    botonSalirSistema.build("Salir",
+        Vector2f(xPos, startY + 3 * (buttonHeight + spacing)), "morado");
+
+    bool hoverRegistrarUsuario = false;
+    bool hoverEliminarUsuario = false;
+    bool hoverConsultarUsuarios = false;
+    bool hoverSalirSistema = false;
 
     while (window.isOpen()) {
         Event event;
@@ -32,51 +61,83 @@ windowsMenu::windowsMenu()
                 window.close();
             }
 
-            FloatRect bounds = exitButton.getShape().getGlobalBounds();
+            auto handleButton = [&](Button& button, bool& hoverFlag) -> bool {
+                bool clicked = false;
+                FloatRect bounds = button.getShape().getGlobalBounds();
 
-            if (event.type == Event::MouseMoved) {
-                Vector2i mousePos = Mouse::getPosition(window);
-                bool nowHover = bounds.contains(static_cast<float>(mousePos.x),
-                    static_cast<float>(mousePos.y));
-                hoverExit = nowHover;
+                if (event.type == Event::MouseMoved) {
+                    Vector2i mousePos = Mouse::getPosition(window);
+                    bool nowHover = bounds.contains(static_cast<float>(mousePos.x),
+                        static_cast<float>(mousePos.y));
+                    hoverFlag = nowHover;
 
-                if (nowHover)
-                    exitButton.getShape().setFillColor(exitButton.getColorHover());
-                else
-                    exitButton.getShape().setFillColor(exitButton.getColorNormal());
-            }
-
-            if (event.type == Event::MouseButtonPressed &&
-                event.mouseButton.button == Mouse::Left) {
-
-                Vector2i mousePos(event.mouseButton.x, event.mouseButton.y);
-                if (bounds.contains(static_cast<float>(mousePos.x),
-                    static_cast<float>(mousePos.y))) {
-                    exitButton.getShape().setFillColor(exitButton.getColorPressed());
+                    if (nowHover)
+                        button.getShape().setFillColor(button.getColorHover());
+                    else
+                        button.getShape().setFillColor(button.getColorNormal());
                 }
+
+                if (event.type == Event::MouseButtonPressed &&
+                    event.mouseButton.button == Mouse::Left) {
+
+                    Vector2i mousePos(event.mouseButton.x, event.mouseButton.y);
+                    if (bounds.contains(static_cast<float>(mousePos.x),
+                        static_cast<float>(mousePos.y))) {
+                        button.getShape().setFillColor(button.getColorPressed());
+                    }
+                }
+
+                if (event.type == Event::MouseButtonReleased &&
+                    event.mouseButton.button == Mouse::Left) {
+
+                    Vector2i mousePos(event.mouseButton.x, event.mouseButton.y);
+                    bool inside = bounds.contains(static_cast<float>(mousePos.x),
+                        static_cast<float>(mousePos.y));
+
+                    button.getShape().setFillColor(
+                        hoverFlag ? button.getColorHover()
+                        : button.getColorNormal()
+                    );
+
+                    if (inside)
+                        clicked = true;
+                }
+
+                return clicked;
+                };
+
+            if (handleButton(botonRegistrarUsuario, hoverRegistrarUsuario)) {
+                // aca va la accion que va hacer el button Registrar Usuario
             }
 
-            if (event.type == Event::MouseButtonReleased &&
-                event.mouseButton.button == Mouse::Left) {
+            if (handleButton(botonEliminarUsuario, hoverEliminarUsuario)) {
+                // aca va la accion que va hacer el button Eliminar Usuario
+            }
 
-                Vector2i mousePos(event.mouseButton.x, event.mouseButton.y);
-                bool inside = bounds.contains(static_cast<float>(mousePos.x),
-                    static_cast<float>(mousePos.y));
+            if (handleButton(botonConsultarUsuarios, hoverConsultarUsuarios)) {
+                // aca va la accion que va hacer el button Consultar Usuarios
+            }
 
-                if (inside)
-                    window.close();
-
-                exitButton.getShape().setFillColor(
-                    hoverExit ? exitButton.getColorHover()
-                    : exitButton.getColorNormal()
-                );
+            if (handleButton(botonSalirSistema, hoverSalirSistema)) {
+                // aca va la accion que va hacer el button Salir
+                window.close();
             }
         }
 
-        window.clear(Color(0xED, 0xED, 0xED));
+        window.clear(Color(194, 189, 224));
 
-        window.draw(exitButton.getShape());
-        window.draw(exitButton.getText());
+        window.draw(botonRegistrarUsuario.getShape());
+        window.draw(botonRegistrarUsuario.getText());
+
+        window.draw(botonEliminarUsuario.getShape());
+        window.draw(botonEliminarUsuario.getText());
+
+        window.draw(botonConsultarUsuarios.getShape());
+        window.draw(botonConsultarUsuarios.getText());
+
+        window.draw(botonSalirSistema.getShape());
+        window.draw(botonSalirSistema.getText());
 
         window.display();
+    }
 }

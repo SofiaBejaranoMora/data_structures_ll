@@ -134,12 +134,21 @@
     <ClCompile Include="Aslyn_Bejarano_Proyectoll.cpp" />
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="User.cpp" />
+    <ClCompile Include="UserTree.cpp" />
     <ClCompile Include="windowsMenu.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Button.h" />
+    <ClInclude Include="DoubleList.h" />
+    <ClInclude Include="DoubleNode.h" />
+    <ClInclude Include="NodeTree.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="User.h" />
+    <ClInclude Include="UserTree.h" />
     <ClInclude Include="windowsMenu.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Aslyn_Bejarano_Proyectoll.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

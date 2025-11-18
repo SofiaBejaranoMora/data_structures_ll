@@ -1,6 +1,7 @@
 #include "windowsMenu.h"
 
 int main() {
-    windowsMenu();
+    windowsMenu menu;
+    menu.run();
     return 0;
 }

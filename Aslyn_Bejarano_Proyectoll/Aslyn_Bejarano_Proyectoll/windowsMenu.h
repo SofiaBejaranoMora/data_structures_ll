@@ -1,10 +1,14 @@
 #pragma once
+#include <SFML/Graphics.hpp>
 
 using namespace sf;
 
 class windowsMenu
 {
-	public:
-		windowsMenu();
-};
+    private:
+        VideoMode mode;
 
+    public:
+        windowsMenu();
+        void run();
+};

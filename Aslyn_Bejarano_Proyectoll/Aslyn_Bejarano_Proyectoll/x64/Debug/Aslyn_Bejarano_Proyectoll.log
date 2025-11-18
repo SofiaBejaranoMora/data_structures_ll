@@ -1,17 +1,2 @@
-﻿  Aslyn_Bejarano_Proyectoll.cpp
-D:\Git\data_structures_ll\Aslyn_Bejarano_Proyectoll\Aslyn_Bejarano_Proyectoll\windowsMenu.h(3,17): error C2871: 'sf': no existe ningún espacio de nombres con este nombre
-  (compilando archivo de origen "Aslyn_Bejarano_Proyectoll.cpp")
-  
-D:\Git\data_structures_ll\Aslyn_Bejarano_Proyectoll\Aslyn_Bejarano_Proyectoll\windowsMenu.h(3,17): error C2065: 'sf': identificador no declarado
-  (compilando archivo de origen "Aslyn_Bejarano_Proyectoll.cpp")
-  
-  User.cpp
-  windowsMenu.cpp
-D:\Git\data_structures_ll\Aslyn_Bejarano_Proyectoll\Aslyn_Bejarano_Proyectoll\windowsMenu.h(3,17): error C2871: 'sf': no existe ningún espacio de nombres con este nombre
-  (compilando archivo de origen "windowsMenu.cpp")
-  
-D:\Git\data_structures_ll\Aslyn_Bejarano_Proyectoll\Aslyn_Bejarano_Proyectoll\windowsMenu.h(3,17): error C2065: 'sf': identificador no declarado
-  (compilando archivo de origen "windowsMenu.cpp")
-  
-D:\Git\data_structures_ll\Aslyn_Bejarano_Proyectoll\Aslyn_Bejarano_Proyectoll\windowsMenu.cpp(7,1): error C1075: "{": no se encontró ningún token coincidente
-  Generando código...
+﻿  UserTree.cpp
+  Aslyn_Bejarano_Proyectoll.vcxproj -> D:\Git\data_structures_ll\Aslyn_Bejarano_Proyectoll\x64\Debug\Aslyn_Bejarano_Proyectoll.exe
