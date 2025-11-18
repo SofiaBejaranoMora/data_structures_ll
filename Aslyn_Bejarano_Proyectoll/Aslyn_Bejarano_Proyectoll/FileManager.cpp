@@ -1,6 +1,11 @@
 #include "FileManager.h"
 #include <fstream>
 #include <sstream>
+#include <iostream>
+#include <filesystem>
+
+using namespace std;
+namespace fs = std::filesystem;
 
 FileManager::FileManager() {
     userFilename = "";
@@ -82,6 +87,9 @@ bool FileManager::saveUsers(const list<User>& users) {
     if (!outputFile.is_open()) {
         return false;
     }
+
+    fs::path fullPath = fs::absolute(userFilename);
+    cout << "Archivo de usuarios guardado en: " << fullPath.string() << endl;
 
     for (const User& user : users) {
         string serialized = serializeUser(user);
