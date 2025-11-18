@@ -133,9 +133,13 @@
   <ItemGroup>
     <ClCompile Include="Aslyn_Bejarano_Proyectoll.cpp" />
     <ClCompile Include="Button.cpp" />
+    <ClCompile Include="User.cpp" />
+    <ClCompile Include="windowsMenu.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Button.h" />
+    <ClInclude Include="User.h" />
+    <ClInclude Include="windowsMenu.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
