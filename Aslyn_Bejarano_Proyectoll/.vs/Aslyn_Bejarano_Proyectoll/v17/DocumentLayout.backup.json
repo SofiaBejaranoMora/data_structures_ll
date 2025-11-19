@@ -3,28 +3,20 @@
   "WorkspaceRootPath": "D:\\Git\\data_structures_ll\\Aslyn_Bejarano_Proyectoll\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{43A3FCEE-CE08-4B02-B18A-BE9FC1E5B3AE}|Aslyn_Bejarano_Proyectoll\\Aslyn_Bejarano_Proyectoll.vcxproj|D:\\Git\\data_structures_ll\\Aslyn_Bejarano_Proyectoll\\Aslyn_Bejarano_Proyectoll\\Graph.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{43A3FCEE-CE08-4B02-B18A-BE9FC1E5B3AE}|Aslyn_Bejarano_Proyectoll\\Aslyn_Bejarano_Proyectoll.vcxproj|solutionrelative:Aslyn_Bejarano_Proyectoll\\Graph.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{43A3FCEE-CE08-4B02-B18A-BE9FC1E5B3AE}|Aslyn_Bejarano_Proyectoll\\Aslyn_Bejarano_Proyectoll.vcxproj|D:\\Git\\data_structures_ll\\Aslyn_Bejarano_Proyectoll\\Aslyn_Bejarano_Proyectoll\\Aslyn_Bejarano_Proyectoll.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{43A3FCEE-CE08-4B02-B18A-BE9FC1E5B3AE}|Aslyn_Bejarano_Proyectoll\\Aslyn_Bejarano_Proyectoll.vcxproj|solutionrelative:Aslyn_Bejarano_Proyectoll\\Aslyn_Bejarano_Proyectoll.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{43A3FCEE-CE08-4B02-B18A-BE9FC1E5B3AE}|Aslyn_Bejarano_Proyectoll\\Aslyn_Bejarano_Proyectoll.vcxproj|D:\\Git\\data_structures_ll\\Aslyn_Bejarano_Proyectoll\\Aslyn_Bejarano_Proyectoll\\WindowsGraph.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{43A3FCEE-CE08-4B02-B18A-BE9FC1E5B3AE}|Aslyn_Bejarano_Proyectoll\\Aslyn_Bejarano_Proyectoll.vcxproj|solutionrelative:Aslyn_Bejarano_Proyectoll\\WindowsGraph.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{43A3FCEE-CE08-4B02-B18A-BE9FC1E5B3AE}|Aslyn_Bejarano_Proyectoll\\Aslyn_Bejarano_Proyectoll.vcxproj|D:\\Git\\data_structures_ll\\Aslyn_Bejarano_Proyectoll\\Aslyn_Bejarano_Proyectoll\\WindowsGraph.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{43A3FCEE-CE08-4B02-B18A-BE9FC1E5B3AE}|Aslyn_Bejarano_Proyectoll\\Aslyn_Bejarano_Proyectoll.vcxproj|solutionrelative:Aslyn_Bejarano_Proyectoll\\WindowsGraph.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{43A3FCEE-CE08-4B02-B18A-BE9FC1E5B3AE}|Aslyn_Bejarano_Proyectoll\\Aslyn_Bejarano_Proyectoll.vcxproj|D:\\Git\\data_structures_ll\\Aslyn_Bejarano_Proyectoll\\Aslyn_Bejarano_Proyectoll\\windowsMenu.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{43A3FCEE-CE08-4B02-B18A-BE9FC1E5B3AE}|Aslyn_Bejarano_Proyectoll\\Aslyn_Bejarano_Proyectoll.vcxproj|solutionrelative:Aslyn_Bejarano_Proyectoll\\windowsMenu.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{43A3FCEE-CE08-4B02-B18A-BE9FC1E5B3AE}|Aslyn_Bejarano_Proyectoll\\Aslyn_Bejarano_Proyectoll.vcxproj|D:\\Git\\data_structures_ll\\Aslyn_Bejarano_Proyectoll\\Aslyn_Bejarano_Proyectoll\\WindowsGraph.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{43A3FCEE-CE08-4B02-B18A-BE9FC1E5B3AE}|Aslyn_Bejarano_Proyectoll\\Aslyn_Bejarano_Proyectoll.vcxproj|solutionrelative:Aslyn_Bejarano_Proyectoll\\WindowsGraph.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{43A3FCEE-CE08-4B02-B18A-BE9FC1E5B3AE}|Aslyn_Bejarano_Proyectoll\\Aslyn_Bejarano_Proyectoll.vcxproj|D:\\Git\\data_structures_ll\\Aslyn_Bejarano_Proyectoll\\Aslyn_Bejarano_Proyectoll\\windowsMenu.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{43A3FCEE-CE08-4B02-B18A-BE9FC1E5B3AE}|Aslyn_Bejarano_Proyectoll\\Aslyn_Bejarano_Proyectoll.vcxproj|solutionrelative:Aslyn_Bejarano_Proyectoll\\windowsMenu.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{43A3FCEE-CE08-4B02-B18A-BE9FC1E5B3AE}|Aslyn_Bejarano_Proyectoll\\Aslyn_Bejarano_Proyectoll.vcxproj|D:\\Git\\data_structures_ll\\Aslyn_Bejarano_Proyectoll\\Aslyn_Bejarano_Proyectoll\\Graph.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{43A3FCEE-CE08-4B02-B18A-BE9FC1E5B3AE}|Aslyn_Bejarano_Proyectoll\\Aslyn_Bejarano_Proyectoll.vcxproj|solutionrelative:Aslyn_Bejarano_Proyectoll\\Graph.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -34,7 +26,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Bookmark",
@@ -42,7 +34,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 3,
               "Title": "Graph.cpp",
               "DocumentMoniker": "D:\\Git\\data_structures_ll\\Aslyn_Bejarano_Proyectoll\\Aslyn_Bejarano_Proyectoll\\Graph.cpp",
               "RelativeDocumentMoniker": "Aslyn_Bejarano_Proyectoll\\Graph.cpp",
@@ -55,13 +47,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 1,
               "Title": "WindowsGraph.cpp",
               "DocumentMoniker": "D:\\Git\\data_structures_ll\\Aslyn_Bejarano_Proyectoll\\Aslyn_Bejarano_Proyectoll\\WindowsGraph.cpp",
               "RelativeDocumentMoniker": "Aslyn_Bejarano_Proyectoll\\WindowsGraph.cpp",
               "ToolTip": "D:\\Git\\data_structures_ll\\Aslyn_Bejarano_Proyectoll\\Aslyn_Bejarano_Proyectoll\\WindowsGraph.cpp",
               "RelativeToolTip": "Aslyn_Bejarano_Proyectoll\\WindowsGraph.cpp",
-              "ViewState": "AgIAAM4BAAAAAAAAAAAiwOUBAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAPEBAAAAAAAAAAAiwAECAAAXAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-11-19T01:11:58.356Z",
               "EditorCaption": ""
@@ -74,46 +66,20 @@
               "RelativeDocumentMoniker": "Aslyn_Bejarano_Proyectoll\\WindowsGraph.h",
               "ToolTip": "D:\\Git\\data_structures_ll\\Aslyn_Bejarano_Proyectoll\\Aslyn_Bejarano_Proyectoll\\WindowsGraph.h",
               "RelativeToolTip": "Aslyn_Bejarano_Proyectoll\\WindowsGraph.h",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAiwBEAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2025-11-19T02:07:57.816Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "windowsMenu.h",
-              "DocumentMoniker": "D:\\Git\\data_structures_ll\\Aslyn_Bejarano_Proyectoll\\Aslyn_Bejarano_Proyectoll\\windowsMenu.h",
-              "RelativeDocumentMoniker": "Aslyn_Bejarano_Proyectoll\\windowsMenu.h",
-              "ToolTip": "D:\\Git\\data_structures_ll\\Aslyn_Bejarano_Proyectoll\\Aslyn_Bejarano_Proyectoll\\windowsMenu.h",
-              "RelativeToolTip": "Aslyn_Bejarano_Proyectoll\\windowsMenu.h",
-              "ViewState": "AgIAAAgAAAAAAAAAAAAqwBwAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-11-19T01:36:34.114Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "windowsMenu.cpp",
-              "DocumentMoniker": "D:\\Git\\data_structures_ll\\Aslyn_Bejarano_Proyectoll\\Aslyn_Bejarano_Proyectoll\\windowsMenu.cpp",
-              "RelativeDocumentMoniker": "Aslyn_Bejarano_Proyectoll\\windowsMenu.cpp",
-              "ToolTip": "D:\\Git\\data_structures_ll\\Aslyn_Bejarano_Proyectoll\\Aslyn_Bejarano_Proyectoll\\windowsMenu.cpp",
-              "RelativeToolTip": "Aslyn_Bejarano_Proyectoll\\windowsMenu.cpp",
-              "ViewState": "AgIAAPYAAAAAAAAAAAAqwP8AAAAYAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-11-18T11:17:54.699Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "Aslyn_Bejarano_Proyectoll.cpp",
               "DocumentMoniker": "D:\\Git\\data_structures_ll\\Aslyn_Bejarano_Proyectoll\\Aslyn_Bejarano_Proyectoll\\Aslyn_Bejarano_Proyectoll.cpp",
               "RelativeDocumentMoniker": "Aslyn_Bejarano_Proyectoll\\Aslyn_Bejarano_Proyectoll.cpp",
               "ToolTip": "D:\\Git\\data_structures_ll\\Aslyn_Bejarano_Proyectoll\\Aslyn_Bejarano_Proyectoll\\Aslyn_Bejarano_Proyectoll.cpp",
               "RelativeToolTip": "Aslyn_Bejarano_Proyectoll\\Aslyn_Bejarano_Proyectoll.cpp",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAiwAYAAAABAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-11-17T02:39:01.645Z",
               "EditorCaption": ""

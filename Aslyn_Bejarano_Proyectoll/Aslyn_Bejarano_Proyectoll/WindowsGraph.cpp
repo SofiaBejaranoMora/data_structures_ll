@@ -1,210 +1,109 @@
 #include "WindowsGraph.h"
-#include "Button.h"
-
-#include <vector>
-#include <cmath>
-#include <iomanip>
 #include <sstream>
-#include <algorithm>
+#include <iomanip>
+#include <cmath>
 
 using namespace sf;
 using namespace std;
 
-namespace
+struct TextField {
+    RectangleShape box;
+    Text label;
+    Text valueText;
+    string value;
+    bool active;
+
+    TextField() : active(false) {}
+};
+
+static void configurarCampo(TextField& campo,
+    const string& etiqueta,
+    const Font& font,
+    const Vector2f& position,
+    const Vector2f& size)
 {
-    void drawStopNode(RenderWindow& window, const Font& font,
-        const string& label, const Vector2f& position)
-    {
-        float nodeWidth = 160.f;
-        float nodeHeight = 50.f;
+    Color lila(194, 189, 224);
+    Color morado(62, 27, 116);
 
-        Color morado(62, 27, 116);
-        Color lila(194, 189, 224);
+    campo.box.setSize(size);
+    campo.box.setPosition(position);
+    campo.box.setFillColor(lila);
+    campo.box.setOutlineThickness(2.f);
+    campo.box.setOutlineColor(morado);
 
-        RectangleShape rect;
-        rect.setSize(Vector2f(nodeWidth, nodeHeight));
-        rect.setFillColor(morado);
-        rect.setOrigin(nodeWidth / 2.f, nodeHeight / 2.f);
-        rect.setPosition(position);
-        window.draw(rect);
+    campo.label.setFont(font);
+    campo.label.setString(etiqueta);
+    campo.label.setCharacterSize(22);
+    campo.label.setFillColor(morado);
 
-        Text text;
-        text.setFont(font);
-        text.setString(label);
-        text.setCharacterSize(26);
-        text.setFillColor(lila);
+    FloatRect lb = campo.label.getLocalBounds();
+    float centerX = position.x + size.x / 2.f;
+    float labelY = position.y - 26.f;
+    campo.label.setOrigin(lb.left + lb.width / 2.f, lb.top + lb.height / 2.f);
+    campo.label.setPosition(centerX, labelY);
 
-        FloatRect tb = text.getLocalBounds();
-        text.setOrigin(tb.left + tb.width / 2.f, tb.top + tb.height / 2.f);
-        text.setPosition(position);
+    campo.value.clear();
+    campo.valueText.setFont(font);
+    campo.valueText.setCharacterSize(22);
+    campo.valueText.setFillColor(morado);
+    campo.valueText.setString("");
 
-        window.draw(text);
+    FloatRect vb = campo.valueText.getLocalBounds();
+    campo.valueText.setOrigin(vb.left, vb.top + vb.height / 2.f);
+    campo.valueText.setPosition(position.x + 10.f,
+        position.y + size.y / 2.f);
+
+    campo.active = false;
+}
+
+static void manejarTextoCampo(TextField& campo, Uint32 unicode)
+{
+    if (!campo.active)
+        return;
+
+    if (unicode == 8) {
+        if (!campo.value.empty()) {
+            campo.value.pop_back();
+            campo.valueText.setString(campo.value);
+        }
+        return;
     }
 
-    void drawEdgeLine(RenderWindow& window, const Vector2f& from, const Vector2f& to)
-    {
-        Vertex line[] = {
-            Vertex(from, Color::Black),
-            Vertex(to, Color::Black)
-        };
-        window.draw(line, 2, Lines);
+    if (unicode < 32 || unicode > 126)
+        return;
+
+    if (campo.value.size() >= 22)
+        return;
+
+    char c = static_cast<char>(unicode);
+    campo.value.push_back(c);
+    campo.valueText.setString(campo.value);
+}
+
+static double obtenerPesoArista(const Graph& graph,
+    const Stop* a,
+    const Stop* b)
+{
+    const vector<Stop*>& stops = graph.getStops();
+    const vector<vector<pair<int, double>>>& adj = graph.getAdjacencyList();
+
+    int ia = -1;
+    int ib = -1;
+
+    for (int i = 0; i < (int)stops.size(); i++) {
+        if (stops[i] == a) ia = i;
+        if (stops[i] == b) ib = i;
     }
 
-    void drawEdgeWeight(RenderWindow& window, const Font& font,
-        const Vector2f& from, const Vector2f& to,
-        double weight, const Color& color)
-    {
-        Vector2f mid((from.x + to.x) / 2.f, (from.y + to.y) / 2.f - 18.f);
-
-        Text text;
-        text.setFont(font);
-
-        ostringstream oss;
-        oss << fixed << setprecision(2) << weight;
-        text.setString(oss.str());
-        text.setCharacterSize(20);
-        text.setFillColor(color);
-
-        FloatRect lb = text.getLocalBounds();
-        text.setOrigin(lb.left + lb.width / 2.f, lb.top + lb.height / 2.f);
-        text.setPosition(mid);
-
-        window.draw(text);
-    }
-
-    double findEdgeWeight(const Graph& graph, int originId, int destinationId)
-    {
-        const vector<Stop*>& stops = graph.getStops();
-        const vector<vector<pair<int, double>>>& adjacency = graph.getAdjacencyList();
-
-        int n = (int)stops.size();
-        int originIndex = -1;
-        int destIndex = -1;
-
-        for (int i = 0; i < n; ++i)
-        {
-            if (stops[i] && stops[i]->getId() == originId)
-                originIndex = i;
-            if (stops[i] && stops[i]->getId() == destinationId)
-                destIndex = i;
-        }
-
-        if (originIndex == -1 || destIndex == -1)
-            return 0.0;
-
-        for (const auto& neighbor : adjacency[originIndex])
-        {
-            if (neighbor.first == destIndex)
-                return neighbor.second;
-        }
-
-        for (const auto& neighbor : adjacency[destIndex])
-        {
-            if (neighbor.first == originIndex)
-                return neighbor.second;
-        }
-
+    if (ia == -1 || ib == -1)
         return 0.0;
+
+    for (const auto& edge : adj[ia]) {
+        if (edge.first == ib)
+            return edge.second;
     }
 
-    void drawOriginalGraph(RenderWindow& window, const Graph& graph,
-        const Font& font, const FloatRect& areaBounds,
-        bool showWeights)
-    {
-        const vector<Stop*>& stops = graph.getStops();
-        size_t n = stops.size();
-        if (n == 0)
-            return;
-
-        float radius = std::min(areaBounds.width, areaBounds.height) * 0.35f;
-        Vector2f center(areaBounds.left + areaBounds.width / 2.f,
-            areaBounds.top + areaBounds.height / 2.f);
-
-        vector<Vector2f> positions(n);
-        const float PI = 3.14159265359f;
-
-        for (size_t i = 0; i < n; ++i)
-        {
-            float angle = 2.f * PI * static_cast<float>(i) / static_cast<float>(n) - PI / 2.f;
-            positions[i].x = center.x + radius * std::cos(angle);
-            positions[i].y = center.y + radius * std::sin(angle);
-        }
-
-        const vector<vector<pair<int, double>>>& adjacency = graph.getAdjacencyList();
-
-        for (size_t i = 0; i < n; ++i)
-        {
-            for (const auto& neighbor : adjacency[i])
-            {
-                int j = neighbor.first;
-                if (j <= static_cast<int>(i))
-                    continue;
-
-                Vector2f from = positions[i];
-                Vector2f to = positions[j];
-
-                drawEdgeLine(window, from, to);
-
-                if (showWeights)
-                {
-                    drawEdgeWeight(window, font, from, to,
-                        neighbor.second, Color(62, 27, 116));
-                }
-            }
-        }
-
-        for (size_t i = 0; i < n; ++i)
-        {
-            if (stops[i])
-                drawStopNode(window, font, stops[i]->getName(), positions[i]);
-        }
-    }
-
-    void drawTraversalGraph(RenderWindow& window, const Graph& graph,
-        const Font& font, const vector<Stop*>& order,
-        const FloatRect& areaBounds, bool showWeights)
-    {
-        size_t n = order.size();
-        if (n == 0)
-            return;
-
-        float usableWidth = areaBounds.width * 0.8f;
-        float spacing = (n > 1) ? usableWidth / static_cast<float>(n - 1) : 0.f;
-        float startX = areaBounds.left + (areaBounds.width - usableWidth) / 2.f;
-        float y = areaBounds.top + areaBounds.height / 2.f;
-
-        vector<Vector2f> positions(n);
-        for (size_t i = 0; i < n; ++i)
-        {
-            positions[i].x = startX + spacing * static_cast<float>(i);
-            positions[i].y = y;
-        }
-
-        if (n >= 2)
-        {
-            for (size_t i = 0; i < n - 1; ++i)
-            {
-                Vector2f from = positions[i];
-                Vector2f to = positions[i + 1];
-
-                drawEdgeLine(window, from, to);
-
-                if (showWeights)
-                {
-                    int originId = order[i]->getId();
-                    int destId = order[i + 1]->getId();
-                    double w = findEdgeWeight(graph, originId, destId);
-                    drawEdgeWeight(window, font, from, to, w, Color(62, 27, 116));
-                }
-            }
-        }
-
-        for (size_t i = 0; i < n; ++i)
-        {
-            if (order[i])
-                drawStopNode(window, font, order[i]->getName(), positions[i]);
-        }
-    }
+    return 0.0;
 }
 
 WindowsGraph::WindowsGraph()
@@ -214,7 +113,11 @@ WindowsGraph::WindowsGraph()
 
 void WindowsGraph::run(const Graph& graph)
 {
-    RenderWindow window(mode, "Grafo", Style::Fullscreen);
+    RenderWindow window(
+        mode,
+        "Dijkstra",
+        Style::Fullscreen
+    );
     window.setFramerateLimit(60);
 
     Font font;
@@ -225,260 +128,392 @@ void WindowsGraph::run(const Graph& graph)
     Color lila(194, 189, 224);
     Color morado(62, 27, 116);
 
+    float margin = 30.f;
+    float inputWidth = 260.f;
+    float inputHeight = 70.f;
+    float spacing = 30.f;
+
+    float topY = margin + 30.f;
+
+    TextField campoInicio;
+    TextField campoFinal;
+
+    configurarCampo(
+        campoInicio,
+        "Nombre parada inicio",
+        font,
+        Vector2f(margin, topY),
+        Vector2f(inputWidth, inputHeight)
+    );
+
+    configurarCampo(
+        campoFinal,
+        "Nombre parada Final",
+        font,
+        Vector2f(margin + inputWidth + spacing, topY),
+        Vector2f(inputWidth, inputHeight)
+    );
+
     float buttonWidth = 260.f;
-    float buttonHeight = 90.f;
-    float spacing = 40.f;
+    float buttonHeight = 70.f;
 
-    float totalWidth = 4.f * buttonWidth + 3.f * spacing;
-    float startX = (mode.width - totalWidth) / 2.f;
-    float row1Y = 20.f;
-
-    Button botonGrafo(buttonWidth, buttonHeight, 40, font);
-    botonGrafo.build("Grafo", Vector2f(startX, row1Y), "lila");
-
-    Button botonPrim(buttonWidth, buttonHeight, 40, font);
-    botonPrim.build("Prim", Vector2f(startX + (buttonWidth + spacing) * 1.f, row1Y), "lila");
-
-    Button botonAncho(buttonWidth, buttonHeight, 40, font);
-    botonAncho.build("Ancho", Vector2f(startX + (buttonWidth + spacing) * 2.f, row1Y), "lila");
-
-    Button botonProfundo(buttonWidth, buttonHeight, 40, font);
-    botonProfundo.build("Profundo", Vector2f(startX + (buttonWidth + spacing) * 3.f, row1Y), "lila");
-
-    float secondRowY = row1Y + buttonHeight + 15.f;
-
-    float costWidth = buttonWidth + 40.f;
-    float costHeight = 70.f;
-
-    RectangleShape costBox;
-    costBox.setSize(Vector2f(costWidth, costHeight));
-    costBox.setFillColor(lila);
-    costBox.setOutlineThickness(2.f);
-    costBox.setOutlineColor(morado);
-
-    float costX = botonGrafo.getShape().getPosition().x + (buttonWidth - costWidth) / 2.f;
-    costBox.setPosition(Vector2f(costX, secondRowY));
-
-    Text costText;
-    costText.setFont(font);
-    costText.setCharacterSize(32);
-    costText.setFillColor(morado);
-
-    auto positionCostText = [&]()
-        {
-            FloatRect b = costText.getLocalBounds();
-            costText.setOrigin(b.left + b.width / 2.f, b.top + b.height / 2.f);
-            costText.setPosition(
-                costBox.getPosition().x + costBox.getSize().x / 2.f,
-                costBox.getPosition().y + costBox.getSize().y / 2.f
-            );
-        };
-
-    auto setCostoEmpty = [&]()
-        {
-            costText.setString("Costo total: -");
-            positionCostText();
-        };
-
-    auto setCostoValue = [&](double value)
-        {
-            ostringstream oss;
-            oss << fixed << setprecision(2) << value;
-            costText.setString("Costo total: " + oss.str());
-            positionCostText();
-        };
-
-    setCostoEmpty();
-
-    Button botonVolver(buttonWidth, buttonHeight, 32, font);
-    botonVolver.build(
-        "Volver Menu",
-        Vector2f(botonProfundo.getShape().getPosition().x, secondRowY),
+    Button botonBuscar(buttonWidth, buttonHeight, 22, font);
+    botonBuscar.build(
+        "Buscar ruta mas corta",
+        Vector2f(margin + 2 * (inputWidth + spacing), topY),
         "lila"
     );
 
-    float margin = 20.f;
-    float areaTop = costBox.getPosition().y + costBox.getSize().y + 25.f;
+    float rightX = mode.width - margin - buttonWidth;
+
+    Button botonVolver(buttonWidth, buttonHeight, 22, font);
+    botonVolver.build(
+        "Volver menu",
+        Vector2f(rightX, margin),
+        "lila"
+    );
+
+    RectangleShape boxCosto;
+    boxCosto.setSize(Vector2f(buttonWidth, buttonHeight));
+    boxCosto.setPosition(Vector2f(rightX, margin + buttonHeight + 10.f));
+    boxCosto.setFillColor(lila);
+    boxCosto.setOutlineThickness(2.f);
+    boxCosto.setOutlineColor(morado);
+
+    Text costoText;
+    costoText.setFont(font);
+    costoText.setCharacterSize(24);
+    costoText.setFillColor(morado);
+    costoText.setString("Costo total: -");
+    {
+        FloatRect cb = costoText.getLocalBounds();
+        costoText.setOrigin(cb.left + cb.width / 2.f,
+            cb.top + cb.height / 2.f);
+        costoText.setPosition(
+            boxCosto.getPosition().x + boxCosto.getSize().x / 2.f,
+            boxCosto.getPosition().y + boxCosto.getSize().y / 2.f
+        );
+    }
 
     RectangleShape areaGraph;
-    areaGraph.setPosition(Vector2f(margin, areaTop));
-    areaGraph.setSize(Vector2f(mode.width - 2.f * margin, mode.height - areaTop - margin));
+    float areaY = topY + inputHeight + 60.f;
+    areaGraph.setPosition(Vector2f(margin, areaY));
+    areaGraph.setSize(Vector2f(mode.width - 2.f * margin,
+        mode.height - areaY - margin));
     areaGraph.setFillColor(Color::White);
     areaGraph.setOutlineThickness(3.f);
     areaGraph.setOutlineColor(Color::Black);
 
-    bool hoverGrafo = false;
-    bool hoverPrim = false;
-    bool hoverAncho = false;
-    bool hoverProfundo = false;
+    bool hoverBuscar = false;
     bool hoverVolver = false;
 
-    enum class GraphViewMode { Original, Prim, BFS, DFS };
-    GraphViewMode currentMode = GraphViewMode::Original;
+    vector<Stop*> camino;
+    bool mostrarCamino = false;
+    double costoTotal = 0.0;
 
-    Graph* primGraph = nullptr;
-
-    while (window.isOpen())
-    {
-        Event event;
-        while (window.pollEvent(event))
+    auto handleButton = [&](Event& event, Button& button, bool& hoverFlag) -> bool
         {
-            if (event.type == Event::Closed ||
-                (event.type == Event::KeyPressed && event.key.code == Keyboard::Escape))
-            {
-                if (primGraph)
-                {
-                    delete primGraph;
-                    primGraph = nullptr;
+            bool clicked = false;
+            FloatRect bounds = button.getShape().getGlobalBounds();
+
+            if (event.type == Event::MouseMoved) {
+                Vector2i mousePos = Mouse::getPosition(window);
+                bool nowHover = bounds.contains(static_cast<float>(mousePos.x),
+                    static_cast<float>(mousePos.y));
+                hoverFlag = nowHover;
+
+                if (nowHover)
+                    button.getShape().setFillColor(button.getColorHover());
+                else
+                    button.getShape().setFillColor(button.getColorNormal());
+            }
+
+            if (event.type == Event::MouseButtonPressed &&
+                event.mouseButton.button == Mouse::Left) {
+
+                Vector2i mousePos(event.mouseButton.x, event.mouseButton.y);
+                if (bounds.contains(static_cast<float>(mousePos.x),
+                    static_cast<float>(mousePos.y))) {
+                    button.getShape().setFillColor(button.getColorPressed());
                 }
+            }
+
+            if (event.type == Event::MouseButtonReleased &&
+                event.mouseButton.button == Mouse::Left) {
+
+                Vector2i mousePos(event.mouseButton.x, event.mouseButton.y);
+                bool inside = bounds.contains(static_cast<float>(mousePos.x),
+                    static_cast<float>(mousePos.y));
+
+                button.getShape().setFillColor(
+                    hoverFlag ? button.getColorHover()
+                    : button.getColorNormal()
+                );
+
+                if (inside)
+                    clicked = true;
+            }
+
+            return clicked;
+        };
+
+    auto drawNode = [&](const string& label, const Vector2f& position)
+        {
+            float nodeWidth = 150.f;
+            float nodeHeight = 50.f;
+
+            RectangleShape rect;
+            rect.setSize(Vector2f(nodeWidth, nodeHeight));
+            rect.setOrigin(nodeWidth / 2.f, nodeHeight / 2.f);
+            rect.setPosition(position);
+            rect.setFillColor(morado);
+
+            Text text;
+            text.setFont(font);
+            text.setString(label);
+            text.setCharacterSize(22);
+            text.setFillColor(lila);
+
+            FloatRect tb = text.getLocalBounds();
+            text.setOrigin(tb.left + tb.width / 2.f,
+                tb.top + tb.height / 2.f);
+            text.setPosition(position);
+
+            window.draw(rect);
+            window.draw(text);
+        };
+
+    auto drawOriginalGraph = [&]()
+        {
+            const vector<Stop*>& stops = graph.getStops();
+            const vector<vector<pair<int, double>>>& adj = graph.getAdjacencyList();
+
+            int n = static_cast<int>(stops.size());
+            if (n == 0)
+                return;
+
+            vector<Vector2f> positions;
+            positions.resize(n);
+
+            Vector2f center(
+                areaGraph.getPosition().x + areaGraph.getSize().x / 2.f,
+                areaGraph.getPosition().y + areaGraph.getSize().y / 2.f
+            );
+            float radius = min(areaGraph.getSize().x, areaGraph.getSize().y) / 3.f;
+
+            for (int i = 0; i < n; ++i) {
+                float angle = 2.f * 3.1415926f * static_cast<float>(i) / static_cast<float>(n);
+                float x = center.x + radius * cos(angle);
+                float y = center.y + radius * sin(angle);
+                positions[i] = Vector2f(x, y);
+            }
+
+            for (int i = 0; i < n; ++i) {
+                for (const auto& edge : adj[i]) {
+                    int j = edge.first;
+                    double w = edge.second;
+                    if (j <= i)
+                        continue;
+
+                    Vector2f a = positions[i];
+                    Vector2f b = positions[j];
+
+                    Vertex line[] = {
+                        Vertex(a, Color::Black),
+                        Vertex(b, Color::Black)
+                    };
+                    window.draw(line, 2, Lines);
+
+                    ostringstream ss;
+                    ss.setf(ios::fixed);
+                    ss << setprecision(2) << w;
+
+                    Text weightText;
+                    weightText.setFont(font);
+                    weightText.setCharacterSize(18);
+                    weightText.setFillColor(morado);
+                    weightText.setString(ss.str());
+
+                    Vector2f mid(
+                        (a.x + b.x) / 2.f,
+                        (a.y + b.y) / 2.f - 18.f
+                    );
+                    FloatRect wb = weightText.getLocalBounds();
+                    weightText.setOrigin(wb.left + wb.width / 2.f,
+                        wb.top + wb.height / 2.f);
+                    weightText.setPosition(mid);
+
+                    window.draw(weightText);
+                }
+            }
+
+            for (int i = 0; i < n; ++i) {
+                if (stops[i] != nullptr) {
+                    drawNode(stops[i]->getName(), positions[i]);
+                }
+            }
+        };
+
+    auto drawPath = [&]()
+        {
+            size_t n = camino.size();
+            if (n < 2)
+                return;
+
+            float left = areaGraph.getPosition().x + 80.f;
+            float right = areaGraph.getPosition().x + areaGraph.getSize().x - 80.f;
+            float y = areaGraph.getPosition().y + areaGraph.getSize().y / 2.f;
+
+            float step = 0.f;
+            if (n > 1) {
+                step = (right - left) / static_cast<float>(n - 1);
+            }
+
+            vector<Vector2f> nodePositions;
+            nodePositions.reserve(n);
+
+            for (size_t i = 0; i < n; ++i) {
+                float x = left + step * static_cast<float>(i);
+                nodePositions.push_back(Vector2f(x, y));
+            }
+
+            for (size_t i = 0; i + 1 < n; ++i) {
+                Vertex line[] = {
+                    Vertex(nodePositions[i], Color::Black),
+                    Vertex(nodePositions[i + 1], Color::Black)
+                };
+                window.draw(line, 2, Lines);
+
+                double w = obtenerPesoArista(graph, camino[i], camino[i + 1]);
+                ostringstream ss;
+                ss.setf(ios::fixed);
+                ss << setprecision(2) << w;
+
+                Text weightText;
+                weightText.setFont(font);
+                weightText.setCharacterSize(18);
+                weightText.setFillColor(morado);
+                weightText.setString(ss.str());
+
+                Vector2f mid(
+                    (nodePositions[i].x + nodePositions[i + 1].x) / 2.f,
+                    (nodePositions[i].y + nodePositions[i + 1].y) / 2.f - 18.f
+                );
+                FloatRect wb = weightText.getLocalBounds();
+                weightText.setOrigin(wb.left + wb.width / 2.f,
+                    wb.top + wb.height / 2.f);
+                weightText.setPosition(mid);
+
+                window.draw(weightText);
+            }
+
+            for (size_t i = 0; i < n; ++i) {
+                if (camino[i] != nullptr) {
+                    drawNode(camino[i]->getName(), nodePositions[i]);
+                }
+            }
+        };
+
+    while (window.isOpen()) {
+        Event event;
+        while (window.pollEvent(event)) {
+            if (event.type == Event::Closed ||
+                (event.type == Event::KeyPressed &&
+                    event.key.code == Keyboard::Escape)) {
                 window.close();
             }
 
-            auto handleButtonEvent = [&](Button& button, bool& hoverFlag) -> bool
-                {
-                    bool clicked = false;
-                    FloatRect bounds = button.getShape().getGlobalBounds();
+            if (event.type == Event::MouseButtonPressed &&
+                event.mouseButton.button == Mouse::Left) {
 
-                    if (event.type == Event::MouseMoved)
-                    {
-                        Vector2i mousePos = Mouse::getPosition(window);
-                        bool nowHover = bounds.contains(
-                            static_cast<float>(mousePos.x),
-                            static_cast<float>(mousePos.y)
-                        );
-                        hoverFlag = nowHover;
+                Vector2f mousePos(
+                    static_cast<float>(event.mouseButton.x),
+                    static_cast<float>(event.mouseButton.y)
+                );
 
-                        if (nowHover)
-                            button.getShape().setFillColor(button.getColorHover());
-                        else
-                            button.getShape().setFillColor(button.getColorNormal());
-                    }
+                bool onInicio = campoInicio.box.getGlobalBounds().contains(mousePos);
+                bool onFinal = campoFinal.box.getGlobalBounds().contains(mousePos);
 
-                    if (event.type == Event::MouseButtonPressed &&
-                        event.mouseButton.button == Mouse::Left)
-                    {
-                        Vector2i mousePos(event.mouseButton.x, event.mouseButton.y);
-                        if (bounds.contains(
-                            static_cast<float>(mousePos.x),
-                            static_cast<float>(mousePos.y)))
-                        {
-                            button.getShape().setFillColor(button.getColorPressed());
-                        }
-                    }
+                campoInicio.active = onInicio;
+                campoFinal.active = (!onInicio && onFinal);
+            }
 
-                    if (event.type == Event::MouseButtonReleased &&
-                        event.mouseButton.button == Mouse::Left)
-                    {
-                        Vector2i mousePos(event.mouseButton.x, event.mouseButton.y);
-                        bool inside = bounds.contains(
-                            static_cast<float>(mousePos.x),
-                            static_cast<float>(mousePos.y));
+            if (event.type == Event::TextEntered) {
+                manejarTextoCampo(campoInicio, event.text.unicode);
+                manejarTextoCampo(campoFinal, event.text.unicode);
+            }
 
-                        button.getShape().setFillColor(
-                            hoverFlag ? button.getColorHover()
-                            : button.getColorNormal()
+            if (handleButton(event, botonBuscar, hoverBuscar)) {
+                if (!campoInicio.value.empty() && !campoFinal.value.empty()) {
+                    double nuevoCosto = 0.0;
+                    vector<Stop*> nuevoCamino =
+                        graph.getShortestPathDijkstra(
+                            campoInicio.value,
+                            campoFinal.value,
+                            nuevoCosto
                         );
 
-                        if (inside)
-                            clicked = true;
+                    if (!nuevoCamino.empty()) {
+                        camino = nuevoCamino;
+                        costoTotal = nuevoCosto;
+                        mostrarCamino = true;
+
+                        ostringstream ss;
+                        ss.setf(ios::fixed);
+                        ss << setprecision(2) << costoTotal;
+                        string texto = "Costo total: " + ss.str();
+                        costoText.setString(texto);
+                    }
+                    else {
+                        mostrarCamino = false;
+                        costoText.setString("Costo total: -");
                     }
 
-                    return clicked;
-                };
-
-            bool clickedGrafo = handleButtonEvent(botonGrafo, hoverGrafo);
-            bool clickedPrim = handleButtonEvent(botonPrim, hoverPrim);
-            bool clickedAncho = handleButtonEvent(botonAncho, hoverAncho);
-            bool clickedProfundo = handleButtonEvent(botonProfundo, hoverProfundo);
-            bool clickedVolver = handleButtonEvent(botonVolver, hoverVolver);
-
-            if (clickedGrafo)
-            {
-                currentMode = GraphViewMode::Original;
-                setCostoEmpty();
-            }
-
-            if (clickedPrim)
-            {
-                currentMode = GraphViewMode::Prim;
-
-                if (primGraph)
-                {
-                    delete primGraph;
-                    primGraph = nullptr;
+                    FloatRect cb = costoText.getLocalBounds();
+                    costoText.setOrigin(cb.left + cb.width / 2.f,
+                        cb.top + cb.height / 2.f);
+                    costoText.setPosition(
+                        boxCosto.getPosition().x + boxCosto.getSize().x / 2.f,
+                        boxCosto.getPosition().y + boxCosto.getSize().y / 2.f
+                    );
                 }
-
-                primGraph = graph.getTreePrim();
-                double totalCost = graph.getTreePrimTotalCost();
-                setCostoValue(totalCost);
             }
 
-            if (clickedAncho)
-            {
-                currentMode = GraphViewMode::BFS;
-                setCostoEmpty();
-            }
-
-            if (clickedProfundo)
-            {
-                currentMode = GraphViewMode::DFS;
-                setCostoEmpty();
-            }
-
-            if (clickedVolver)
-            {
-                if (primGraph)
-                {
-                    delete primGraph;
-                    primGraph = nullptr;
-                }
+            if (handleButton(event, botonVolver, hoverVolver)) {
                 window.close();
             }
         }
 
         window.clear(fondo);
 
-        window.draw(botonGrafo.getShape());
-        window.draw(botonGrafo.getText());
+        campoInicio.box.setOutlineColor(
+            campoInicio.active ? Color::Black : morado);
+        campoFinal.box.setOutlineColor(
+            campoFinal.active ? Color::Black : morado);
 
-        window.draw(botonPrim.getShape());
-        window.draw(botonPrim.getText());
+        window.draw(campoInicio.box);
+        window.draw(campoInicio.label);
+        window.draw(campoInicio.valueText);
 
-        window.draw(botonAncho.getShape());
-        window.draw(botonAncho.getText());
+        window.draw(campoFinal.box);
+        window.draw(campoFinal.label);
+        window.draw(campoFinal.valueText);
 
-        window.draw(botonProfundo.getShape());
-        window.draw(botonProfundo.getText());
+        window.draw(botonBuscar.getShape());
+        window.draw(botonBuscar.getText());
 
         window.draw(botonVolver.getShape());
         window.draw(botonVolver.getText());
 
-        window.draw(costBox);
-        window.draw(costText);
+        window.draw(boxCosto);
+        window.draw(costoText);
 
         window.draw(areaGraph);
 
-        FloatRect areaBounds = areaGraph.getGlobalBounds();
-
-        if (currentMode == GraphViewMode::Original)
-        {
-            drawOriginalGraph(window, graph, font, areaBounds, true);
-        }
-        else if (currentMode == GraphViewMode::Prim)
-        {
-            if (primGraph != nullptr)
-                drawOriginalGraph(window, *primGraph, font, areaBounds, true);
-        }
-        else if (currentMode == GraphViewMode::BFS)
-        {
-            vector<Stop*> order = graph.breadthFirstTraversal();
-            drawTraversalGraph(window, graph, font, order, areaBounds, false);
-        }
-        else if (currentMode == GraphViewMode::DFS)
-        {
-            vector<Stop*> order = graph.depthFirstTraversal();
-            drawTraversalGraph(window, graph, font, order, areaBounds, false);
-        }
+        if (mostrarCamino)
+            drawPath();
+        else
+            drawOriginalGraph();
 
         window.display();
     }

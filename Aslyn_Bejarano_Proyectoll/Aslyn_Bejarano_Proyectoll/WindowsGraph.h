@@ -2,12 +2,11 @@
 
 #include <SFML/Graphics.hpp>
 #include "Graph.h"
+#include "Button.h"
 
 using namespace sf;
-using namespace std;
 
-class WindowsGraph
-{
+class WindowsGraph {
 private:
     VideoMode mode;
 
