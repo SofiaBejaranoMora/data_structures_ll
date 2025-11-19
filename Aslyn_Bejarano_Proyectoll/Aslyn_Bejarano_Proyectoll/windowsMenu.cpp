@@ -2,6 +2,7 @@
 #include "Button.h"
 #include "WindowsUser.h"
 #include "WindowsOrder.h"
+#include "WindowsGraph.h"
 
 using namespace sf;
 using namespace std;
@@ -9,14 +10,28 @@ using namespace std;
 windowsMenu::windowsMenu()
 {
     mode = VideoMode::getDesktopMode();
-    fileManager = FileManager("UseriosArchivoOriginal.txt");
+    fileManager = FileManager("UseriosArchivoOriginal.txt", "RutasArchivoOriginal.txt");
     userTree = nullptr;
-    datosCargados = false;
+    graph = nullptr;
+    datosCargadosUsers = false;
+    datosCargadosGraph = false;
+}
+
+windowsMenu::~windowsMenu()
+{
+    if (userTree != nullptr) {
+        delete userTree;
+        userTree = nullptr;
+    }
+    if (graph != nullptr) {
+        delete graph;
+        graph = nullptr;
+    }
 }
 
 void windowsMenu::cargarUserTreeSiEsNecesario()
 {
-    if (!datosCargados) {
+    if (!datosCargadosUsers) {
         UserTree* loaded = fileManager.loadUserTree();
         if (loaded != nullptr) {
             userTree = loaded;
@@ -24,7 +39,21 @@ void windowsMenu::cargarUserTreeSiEsNecesario()
         else {
             userTree = new UserTree();
         }
-        datosCargados = true;
+        datosCargadosUsers = true;
+    }
+}
+
+void windowsMenu::cargarGraphSiEsNecesario()
+{
+    if (!datosCargadosGraph) {
+        Graph* loaded = fileManager.loadGraph();
+        if (loaded != nullptr) {
+            graph = loaded;
+        }
+        else {
+            graph = new Graph();
+        }
+        datosCargadosGraph = true;
     }
 }
 
@@ -42,11 +71,12 @@ void windowsMenu::run()
         return;
 
     cargarUserTreeSiEsNecesario();
+    cargarGraphSiEsNecesario();
 
     float buttonWidth = 300.f;
     float buttonHeight = 70.f;
     float spacing = 20.f;
-    int numButtons = 5;
+    int numButtons = 7;
 
     float centerX = mode.width / 2.f;
     float totalHeight = numButtons * buttonHeight + (numButtons - 1) * spacing;
@@ -69,18 +99,74 @@ void windowsMenu::run()
     botonVerOrdenes.build("Ver ordenes",
         Vector2f(xPos, startY + 3 * (buttonHeight + spacing)), "morado");
 
+    Button botonVerRutas(buttonWidth, buttonHeight, 28, font);
+    botonVerRutas.build("Ver rutas",
+        Vector2f(xPos, startY + 4 * (buttonHeight + spacing)), "morado");
+
+    Button botonDijkstra(buttonWidth, buttonHeight, 28, font);
+    botonDijkstra.build("Dijkstra",
+        Vector2f(xPos, startY + 5 * (buttonHeight + spacing)), "morado");
+
     Button botonSalirSistema(buttonWidth, buttonHeight, 28, font);
     botonSalirSistema.build("Salir",
-        Vector2f(xPos, startY + 4 * (buttonHeight + spacing)), "morado");
+        Vector2f(xPos, startY + 6 * (buttonHeight + spacing)), "morado");
 
     bool hoverRegistrarUsuario = false;
     bool hoverEliminarUsuario = false;
     bool hoverConsultarUsuarios = false;
     bool hoverVerOrdenes = false;
+    bool hoverVerRutas = false;
+    bool hoverDijkstra = false;
     bool hoverSalirSistema = false;
 
     WindowsUser ventanaUsuarios;
     WindowsOrder ventanaOrdenes;
+    WindowsGraph ventanaGrafo;
+
+    auto handleButton = [&](Button& button, bool& hoverFlag, const Event& event, RenderWindow& win) -> bool {
+        bool clicked = false;
+        FloatRect bounds = button.getShape().getGlobalBounds();
+
+        if (event.type == Event::MouseMoved) {
+            Vector2i mousePos = Mouse::getPosition(win);
+            bool nowHover = bounds.contains(static_cast<float>(mousePos.x),
+                static_cast<float>(mousePos.y));
+            hoverFlag = nowHover;
+
+            if (nowHover)
+                button.getShape().setFillColor(button.getColorHover());
+            else
+                button.getShape().setFillColor(button.getColorNormal());
+        }
+
+        if (event.type == Event::MouseButtonPressed &&
+            event.mouseButton.button == Mouse::Left) {
+
+            Vector2i mousePos(event.mouseButton.x, event.mouseButton.y);
+            if (bounds.contains(static_cast<float>(mousePos.x),
+                static_cast<float>(mousePos.y))) {
+                button.getShape().setFillColor(button.getColorPressed());
+            }
+        }
+
+        if (event.type == Event::MouseButtonReleased &&
+            event.mouseButton.button == Mouse::Left) {
+
+            Vector2i mousePos(event.mouseButton.x, event.mouseButton.y);
+            bool inside = bounds.contains(static_cast<float>(mousePos.x),
+                static_cast<float>(mousePos.y));
+
+            button.getShape().setFillColor(
+                hoverFlag ? button.getColorHover()
+                : button.getColorNormal()
+            );
+
+            if (inside)
+                clicked = true;
+        }
+
+        return clicked;
+        };
 
     while (window.isOpen()) {
         Event event;
@@ -88,58 +174,15 @@ void windowsMenu::run()
             if (event.type == Event::Closed ||
                 (event.type == Event::KeyPressed &&
                     event.key.code == Keyboard::Escape)) {
+
                 if (userTree != nullptr) {
                     fileManager.saveUsers(userTree->getPreOrder());
                 }
+
                 window.close();
             }
 
-            auto handleButton = [&](Button& button, bool& hoverFlag) -> bool {
-                bool clicked = false;
-                FloatRect bounds = button.getShape().getGlobalBounds();
-
-                if (event.type == Event::MouseMoved) {
-                    Vector2i mousePos = Mouse::getPosition(window);
-                    bool nowHover = bounds.contains(static_cast<float>(mousePos.x),
-                        static_cast<float>(mousePos.y));
-                    hoverFlag = nowHover;
-
-                    if (nowHover)
-                        button.getShape().setFillColor(button.getColorHover());
-                    else
-                        button.getShape().setFillColor(button.getColorNormal());
-                }
-
-                if (event.type == Event::MouseButtonPressed &&
-                    event.mouseButton.button == Mouse::Left) {
-
-                    Vector2i mousePos(event.mouseButton.x, event.mouseButton.y);
-                    if (bounds.contains(static_cast<float>(mousePos.x),
-                        static_cast<float>(mousePos.y))) {
-                        button.getShape().setFillColor(button.getColorPressed());
-                    }
-                }
-
-                if (event.type == Event::MouseButtonReleased &&
-                    event.mouseButton.button == Mouse::Left) {
-
-                    Vector2i mousePos(event.mouseButton.x, event.mouseButton.y);
-                    bool inside = bounds.contains(static_cast<float>(mousePos.x),
-                        static_cast<float>(mousePos.y));
-
-                    button.getShape().setFillColor(
-                        hoverFlag ? button.getColorHover()
-                        : button.getColorNormal()
-                    );
-
-                    if (inside)
-                        clicked = true;
-                }
-
-                return clicked;
-                };
-
-            if (handleButton(botonRegistrarUsuario, hoverRegistrarUsuario)) {
+            if (handleButton(botonRegistrarUsuario, hoverRegistrarUsuario, event, window)) {
                 window.setVisible(false);
                 if (userTree != nullptr) {
                     ventanaUsuarios.run(UserWindowMode::Registrar, *userTree);
@@ -147,7 +190,7 @@ void windowsMenu::run()
                 window.setVisible(true);
             }
 
-            if (handleButton(botonEliminarUsuario, hoverEliminarUsuario)) {
+            if (handleButton(botonEliminarUsuario, hoverEliminarUsuario, event, window)) {
                 window.setVisible(false);
                 if (userTree != nullptr) {
                     ventanaUsuarios.run(UserWindowMode::Eliminar, *userTree);
@@ -155,7 +198,7 @@ void windowsMenu::run()
                 window.setVisible(true);
             }
 
-            if (handleButton(botonConsultarUsuarios, hoverConsultarUsuarios)) {
+            if (handleButton(botonConsultarUsuarios, hoverConsultarUsuarios, event, window)) {
                 window.setVisible(false);
                 if (userTree != nullptr) {
                     ventanaUsuarios.run(UserWindowMode::Consultar, *userTree);
@@ -163,7 +206,7 @@ void windowsMenu::run()
                 window.setVisible(true);
             }
 
-            if (handleButton(botonVerOrdenes, hoverVerOrdenes)) {
+            if (handleButton(botonVerOrdenes, hoverVerOrdenes, event, window)) {
                 window.setVisible(false);
                 if (userTree != nullptr) {
                     ventanaOrdenes.run(*userTree);
@@ -171,7 +214,23 @@ void windowsMenu::run()
                 window.setVisible(true);
             }
 
-            if (handleButton(botonSalirSistema, hoverSalirSistema)) {
+            if (handleButton(botonVerRutas, hoverVerRutas, event, window)) {
+                window.setVisible(false);
+                if (graph != nullptr) {
+                    ventanaGrafo.run(*graph);
+                }
+                window.setVisible(true);
+            }
+
+            if (handleButton(botonDijkstra, hoverDijkstra, event, window)) {
+                window.setVisible(false);
+                if (graph != nullptr) {
+                    ventanaGrafo.run(*graph);
+                }
+                window.setVisible(true);
+            }
+
+            if (handleButton(botonSalirSistema, hoverSalirSistema, event, window)) {
                 if (userTree != nullptr) {
                     fileManager.saveUsers(userTree->getPreOrder());
                 }
@@ -192,6 +251,12 @@ void windowsMenu::run()
 
         window.draw(botonVerOrdenes.getShape());
         window.draw(botonVerOrdenes.getText());
+
+        window.draw(botonVerRutas.getShape());
+        window.draw(botonVerRutas.getText());
+
+        window.draw(botonDijkstra.getShape());
+        window.draw(botonDijkstra.getText());
 
         window.draw(botonSalirSistema.getShape());
         window.draw(botonSalirSistema.getText());

@@ -1,0 +1,78 @@
+STOPS
+{
+Id: 1
+Nombre: Estacion 1
+Descripcion: Centro
+}
+{
+Id: 2
+Nombre: Estacion 2
+Descripcion: Barrio Norte
+}
+{
+Id: 3
+Nombre: Estacion 3
+Descripcion: Barrio Sur
+}
+{
+Id: 4
+Nombre: Estacion 4
+Descripcion: Universidad
+}
+{
+Id: 5
+Nombre: Estacion 5
+Descripcion: Terminal
+}
+{
+Id: 6
+Nombre: Estacion 6
+Descripcion: Hospital
+}
+
+EDGES
+{
+Origen: 1
+Destino: 2
+Peso: 3.500000
+}
+{
+Origen: 1
+Destino: 6
+Peso: 5.000000
+}
+{
+Origen: 2
+Destino: 3
+Peso: 2.000000
+}
+{
+Origen: 2
+Destino: 6
+Peso: 3.000000
+}
+{
+Origen: 2
+Destino: 4
+Peso: 2.700000
+}
+{
+Origen: 3
+Destino: 4
+Peso: 4.200000
+}
+{
+Origen: 3
+Destino: 5
+Peso: 3.300000
+}
+{
+Origen: 4
+Destino: 5
+Peso: 1.800000
+}
+{
+Origen: 5
+Destino: 6
+Peso: 2.500000
+}

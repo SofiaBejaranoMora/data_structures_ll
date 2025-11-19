@@ -133,9 +133,13 @@
   <ItemGroup>
     <ClCompile Include="Aslyn_Bejarano_Proyectoll.cpp" />
     <ClCompile Include="Button.cpp" />
+    <ClCompile Include="Edge.cpp" />
     <ClCompile Include="FileManager.cpp" />
+    <ClCompile Include="Graph.cpp" />
+    <ClCompile Include="Stop.cpp" />
     <ClCompile Include="User.cpp" />
     <ClCompile Include="UserTree.cpp" />
+    <ClCompile Include="WindowsGraph.cpp" />
     <ClCompile Include="windowsMenu.cpp" />
     <ClCompile Include="WindowsOrder.cpp" />
     <ClCompile Include="WindowsUser.cpp" />
@@ -144,11 +148,15 @@
     <ClInclude Include="Button.h" />
     <ClInclude Include="DoubleList.h" />
     <ClInclude Include="DoubleNode.h" />
+    <ClInclude Include="Edge.h" />
     <ClInclude Include="FileManager.h" />
+    <ClInclude Include="Graph.h" />
     <ClInclude Include="NodeTree.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Stop.h" />
     <ClInclude Include="User.h" />
     <ClInclude Include="UserTree.h" />
+    <ClInclude Include="WindowsGraph.h" />
     <ClInclude Include="windowsMenu.h" />
     <ClInclude Include="WindowsOrder.h" />
     <ClInclude Include="WindowsUser.h" />
