@@ -217,7 +217,7 @@ void windowsMenu::run()
             if (handleButton(botonVerRutas, hoverVerRutas, event, window)) {
                 window.setVisible(false);
                 if (graph != nullptr) {
-                    ventanaGrafo.run(*graph);
+                    ventanaGrafo.run(*graph, GraphWindowMode::Rutas);
                 }
                 window.setVisible(true);
             }
@@ -225,7 +225,7 @@ void windowsMenu::run()
             if (handleButton(botonDijkstra, hoverDijkstra, event, window)) {
                 window.setVisible(false);
                 if (graph != nullptr) {
-                    ventanaGrafo.run(*graph);
+                    ventanaGrafo.run(*graph, GraphWindowMode::Dijkstra);
                 }
                 window.setVisible(true);
             }

@@ -146,8 +146,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Button.h" />
-    <ClInclude Include="DoubleList.h" />
-    <ClInclude Include="DoubleNode.h" />
     <ClInclude Include="Edge.h" />
     <ClInclude Include="FileManager.h" />
     <ClInclude Include="Graph.h" />
